@@ -1,0 +1,12 @@
+﻿{
+  "$schema": "https://raw.githubusercontent.com/bsmg/BSIPA-MetadataFileSchema/master/Schema.json",
+  "id": "SocketSaber",
+  "name": "SocketSaber",
+  "author": "EgorBron",
+  "version": "0.0.1",
+  "description": "Library what allows you to open localhost TCP socket with lots of your current BS activity. Also works ingame withount sockets.",
+  "gameVersion": "1.23.0",
+  "dependsOn": {
+    "BSIPA": "^4.2.0"
+  }
+}
