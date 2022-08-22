@@ -40,12 +40,18 @@ namespace SocketSaber.HarmonyPatches {
     }
     [HarmonyPatch]
     internal static class SongEndInfoGetterSoloPatch {
+        static TimeSpan lastcall;
         [HarmonyPriority(int.MinValue)]
         [HarmonyPatch(typeof(StandardLevelScenesTransitionSetupDataSO), "Finish")]
         private static void Postfix(LevelCompletionResults levelCompletionResults) {
-            new Thread(() => {
-                EventProcessors.MapProcessor.MapEnd(14, levelCompletionResults);
-            }).Start();
+            var now = new TimeSpan();
+            if (lastcall == null) lastcall = now;
+            if (now == lastcall || (now - lastcall).TotalMilliseconds > 1000) {
+                    new Thread(() => {
+                        EventProcessors.MapProcessor.MapEnd(14, levelCompletionResults);
+                    }).Start();
+                    lastcall = now;
+                }
         }
     }
     [HarmonyPatch]
