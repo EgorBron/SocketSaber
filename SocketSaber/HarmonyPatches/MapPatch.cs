@@ -1,10 +1,7 @@
 ﻿using System;
 using HarmonyLib;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using BeatSaverSharp;
 using System.Threading;
-using System.Reflection.Emit;
 using SocketSaber.Utils;
 
 namespace SocketSaber.HarmonyPatches {
@@ -40,18 +37,17 @@ namespace SocketSaber.HarmonyPatches {
     }
     [HarmonyPatch]
     internal static class SongEndInfoGetterSoloPatch {
-        static TimeSpan lastcall;
+        static double lastcall = 0;
         [HarmonyPriority(int.MinValue)]
         [HarmonyPatch(typeof(StandardLevelScenesTransitionSetupDataSO), "Finish")]
         private static void Postfix(LevelCompletionResults levelCompletionResults) {
-            var now = new TimeSpan();
-            if (lastcall == null) lastcall = now;
-            if (now == lastcall || (now - lastcall).TotalMilliseconds > 1000) {
-                    new Thread(() => {
-                        EventProcessors.MapProcessor.MapEnd(14, levelCompletionResults);
-                    }).Start();
-                    lastcall = now;
-                }
+            var now = DateTime.UtcNow.ToUnixTime();
+            if (lastcall == 0 || (now - lastcall) > 1000) {
+                new Thread(() => {
+                    EventProcessors.MapProcessor.MapEnd(14, levelCompletionResults);
+                }).Start();
+                lastcall = DateTime.UtcNow.ToUnixTime();
+            }
         }
     }
     [HarmonyPatch]
@@ -87,8 +83,8 @@ namespace SocketSaber.HarmonyPatches {
     [HarmonyPatch]
     internal class MenueLoadPatch {
         [HarmonyPriority(int.MinValue)]
-        [HarmonyPatch(typeof(MenuScenesTransitionSetupDataSO), "Init")]
-        private void Postfix() {
+        [HarmonyPatch(typeof(MenuScenesTransitionSetupDataSO), nameof(MenuScenesTransitionSetupDataSO.Init))]
+        private static void Postfix() {
             new Thread(() => {
                 var mainDict = new Dict {
                     ["op"] = 10,
