@@ -6,58 +6,59 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SocketSaber.Utils;
+using SocketSaber.EventModels;
+using UnityEngine.UI;
 
 namespace SocketSaber.EventProcessors {
     partial class MapProcessor {
         public static void MapEnd(int opcode, LevelCompletionResults results) {
-            var levelEndDataDict = new Dict {
-                ["causeOfEnd"] = results.levelEndAction.ToString(),
-                ["energyLeft"] = results.energy,
-                ["songEndedAt"] = results.endSongTime,
-                ["gameplayModifiers"] = results.gameplayModifiers,
-                ["rank"] = results.rank,
-                ["score"] = results.totalCutScore,
-                ["combo"] = new Dict {
-                    ["isFullCombo"] = results.fullCombo,
-                    ["maxCombo"] = results.maxCombo
+            var levelEndData = new SongEndModel {
+                causeOfEnd = results.levelEndAction.ToString(),
+                energyLeft = results.energy,
+                songEndedAt = results.endSongTime,
+                gameplayModifiers = results.gameplayModifiers,
+                rank = RankModel.GetRankName(results.rank),
+                score = results.totalCutScore,
+                combo = new ComboInfo {
+                    isFullCombo = results.fullCombo,
+                    maxCombo = results.maxCombo
                 },
-                ["cuts"] = new Dict {
-                    // okCuts - all GOOD and REGISTRED cuts (maybe equals goodCuts? need to check...)
-                    ["okCuts"] = results.okCount,
-                    ["goodCuts"] = results.goodCutsCount,
-                    // badCuts - all MISSED and WRONGLY CUTTED notes
-                    ["badCuts"] = results.badCutsCount,
-                    // just notes what you missed
-                    ["missedNotes"] = results.missedCount,
-                    // wrongly cutted notes
-                    ["notGoodCuts"] = results.notGoodCount
+                cuts = new CutsInfo {
+                    okCuts = results.okCount,
+                    goodCuts = results.goodCutsCount,
+                    badCuts = results.badCutsCount,
+                    missedNotes = results.missedCount,
+                    notGoodCuts = results.notGoodCount
                 },
-                ["movement"] = new Dict {
-                    ["right"] = new Dict {
-                        ["hand"] = results.rightHandMovementDistance,
-                        ["saber"] = results.rightSaberMovementDistance
+                movement = new MovementInfo {
+                    right = new MovementInfo.SpecMovementInfo {
+                        hand = results.rightHandMovementDistance,
+                        saber = results.rightSaberMovementDistance
                     },
-                    ["left"] = new Dict {
-                        ["hand"] = results.leftHandMovementDistance,
-                        ["saber"] = results.leftSaberMovementDistance
+                    left = new MovementInfo.SpecMovementInfo {
+                        hand = results.leftHandMovementDistance,
+                        saber = results.leftSaberMovementDistance
                     }
                 }
             };
-            Plugin.ConnProc.SendDataToAll(opcode, new Dictionary<string, object> { ["levelEndData"] = levelEndDataDict });
+            //Plugin.ConnProc.SendDataToAll(opcode, new Dictionary<string, object> { ["levelEndData"] = levelEndDataDict });
+            Plugin.ConnProc.SendDataToAll(new BaseEventModel { op = opcode, d = levelEndData });
             Plugin.Log.Notice($"Level ended. Opcode: {opcode}");
         }
         public static void MapEnd(int opcode, MultiplayerResultsData results) {
-            var levelEndDataDict = new Dictionary<string, object> {
+            var levelEndData = new SongEndModel {
 
             };
-            Plugin.ConnProc.SendDataToAll(opcode, new Dictionary<string, object> { ["levelEndData"] = levelEndDataDict, ["lobbyData"] = null });
+            //Plugin.ConnProc.SendDataToAll(opcode, new Dictionary<string, object> { ["levelEndData"] = levelEndDataDict, ["lobbyData"] = null });
+            Plugin.ConnProc.SendDataToAll(new BaseEventModel { op = opcode, d = levelEndData });
             Plugin.Log.Notice($"Level ended. Opcode: {opcode}");
         }
         public static void MapEnd(int opcode, MissionCompletionResults results) {
-            var levelEndDataDict = new Dictionary<string, object> {
+            var levelEndData = new SongEndModel {
 
             };
-            Plugin.ConnProc.SendDataToAll(opcode, new Dictionary<string, object> { ["levelEndData"] = levelEndDataDict, ["campaignData"] = null });
+            //Plugin.ConnProc.SendDataToAll(opcode, new Dictionary<string, object> { ["levelEndData"] = levelEndDataDict, ["campaignData"] = null });
+            Plugin.ConnProc.SendDataToAll(new BaseEventModel { op = opcode, d = levelEndData });
             Plugin.Log.Notice($"Level ended. Opcode: {opcode}");
         }
     }

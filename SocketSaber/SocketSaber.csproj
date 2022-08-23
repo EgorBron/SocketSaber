@@ -123,6 +123,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConnectionsProcessor.cs" />
+    <Compile Include="EventModels\IEventModel.cs" />
+    <Compile Include="EventModels\SongEndModel.cs" />
+    <Compile Include="EventModels\SongStartModel.cs" />
+    <Compile Include="EventModels\BaseEventModel.cs" />
     <Compile Include="EventProcessors\MapProcessorMapEnd.cs" />
     <Compile Include="EventProcessors\MapProcessorMapStart.cs" />
     <Compile Include="EventProcessors\MapProcessorRoot.cs" />

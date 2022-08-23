@@ -5,16 +5,17 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using SocketSaber.Utils;
+using SocketSaber.EventModels;
 
 namespace SocketSaber {
     public class SockSConnectionsProcessor : IDisposable {
         TcpListener socket;
         List<TcpClient> tcpClients = new List<TcpClient>();
-        List<Func<Dict, bool>> subscribers = new List<Func<Dict, bool>>();
+        List<Func<BaseEventModel, bool>> subscribers = new List<Func<BaseEventModel, bool>>();
         public SockSConnectionsProcessor(TcpListener sock) {
             socket = sock;
         }
-        public event Func<Dictionary<string, object>, bool> Events {
+        public event Func<BaseEventModel, bool> Events {
             add {
                 
                 subscribers.Add(value);
@@ -39,17 +40,14 @@ namespace SocketSaber {
             tcpClients.Clear();
             socket.Stop();
         }
-        public void SendDataToAll(int opcode, Dictionary<string, object> data) {
-            var mainDict = new Dict {
-                ["op"] = opcode,
-                ["d"] = data
-            };
+        public void SendDataToAll(BaseEventModel data) {
+            var preparedData = JsonConvert.SerializeObject(data);
             new Thread(() => {
                 foreach (var subscriber in subscribers) {
-                    subscriber.Invoke(mainDict);
+                    subscriber.Invoke(data);
                 }
             }).Start();
-            SendRawDataToAll(JsonConvert.SerializeObject(mainDict));
+            SendRawDataToAll(preparedData);
         }
     }
 }
