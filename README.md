@@ -13,17 +13,17 @@ Then just put `SocketSaber.dll` to `Plugins` folder in Beat Saber directory.
 #### Recive data from game
 ```cs
 // subscribe to all events
-SocketSaber.SockSEventation.EveryEvent += (SocketSaber.EventModels.BaseEM event) => {
-  if (event.op == SocketSaber.EventModels.EventList.SongStart) {
-    var songData = event.d as SocketSaber.EventModels.SongStartEM;
+SocketSaber.SockSEventation.EveryEvent += (SocketSaber.EventModels.BaseEM e) => {
+  if (e.op == SocketSaber.EventModels.EventList.SongStart) {
+    var songData = e.d as SocketSaber.EventModels.SongStartEM;
     // we can get some info
     var songDisplayString = $"{songData.songAuthorName} - {songData.songName} ({songData.songSubName})";
     var mapCreatorInfo = $"Map by {songData.mapAuthor} (BeatSaver id: {songData.mapBeatSaverID}, {songData.mapScoreSaberRanked ? "" : "un"}ranked on ScoreSaber)";
  }
 }
 // subscribation to certain events also available
-SocketSaber.SockSEventation.SongStartEvent += (SocketSaber.EventModels.SongStartEM event) => {
-  var songDisplayString = $"{event.songAuthorName} - {event.songName} ({event.songSubName})";
+SocketSaber.SockSEventation.SongStartEvent += (SocketSaber.EventModels.SongStartEM e) => {
+  var songDisplayString = $"{e.songAuthorName} - {e.songName} ({e.songSubName})";
 }
 ```
 
@@ -40,3 +40,7 @@ while 1:
   if recv['op'] == 11: # op 11 - song start
     print(recv['d']['songName']) # will print song name (omg really?)
 ```
+
+## todo
+https://github.com/Kylemc1413/Beat-Saber-Utils instead of raw patches
+fix discord_game_sdk.dll!!!
