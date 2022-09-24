@@ -13,7 +13,7 @@ Then just put `SocketSaber.dll` to `Plugins` folder in Beat Saber directory.
 #### Recive data from game
 ```cs
 // subscribe to all events
-SocketSaber.SocketSaber.EveryEvent += (SocketSaber.EventModels.BaseEM event) => {
+SocketSaber.SockSEventation.EveryEvent += (SocketSaber.EventModels.BaseEM event) => {
   if (event.op == SocketSaber.EventModels.EventList.SongStart) {
     var songData = event.d as SocketSaber.EventModels.SongStartEM;
     // we can get some info
@@ -22,7 +22,7 @@ SocketSaber.SocketSaber.EveryEvent += (SocketSaber.EventModels.BaseEM event) => 
  }
 }
 // subscribation to certain events also available
-SocketSaber.SocketSaber.SongStartEvent += (SocketSaber.EventModels.SongStartEM event) => {
+SocketSaber.SockSEventation.SongStartEvent += (SocketSaber.EventModels.SongStartEM event) => {
   var songDisplayString = $"{event.songAuthorName} - {event.songName} ({event.songSubName})";
 }
 ```
