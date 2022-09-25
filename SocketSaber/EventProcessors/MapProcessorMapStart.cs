@@ -14,6 +14,8 @@ namespace SocketSaber.EventProcessors {
                 mapGameLevelID = difficultyBeatmap.level.levelID,
                 songBPM = difficultyBeatmap.level.beatsPerMinute,
                 mapDifficulty = difficultyBeatmap.difficulty.ToString(),
+                mode = difficultyBeatmap.parentDifficultyBeatmapSet.beatmapCharacteristic.serializedName,
+                gameplayModifiers = gameplayModifiers,
                 mapNJS = difficultyBeatmap.noteJumpMovementSpeed,
                 mapBeatSaverID = null,
                 mapBeatSaverDescription = null,

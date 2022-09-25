@@ -34,6 +34,14 @@
         /// </summary>
         public string mapDifficulty;
         /// <summary>
+        /// Gamemode
+        /// </summary>
+        public string mode;
+        /// <summary>
+        /// With what gameplay modifiers map will be played
+        /// </summary>
+        public GameplayModifiers gameplayModifiers;
+        /// <summary>
         /// Map Note Jump Speed (how fast notes moving)
         /// </summary>
         public float mapNJS;
