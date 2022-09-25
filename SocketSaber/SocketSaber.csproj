@@ -122,7 +122,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConnectionsProcessor.cs" />
+    <Compile Include="Eventation.cs" />
     <Compile Include="EventModels\SongEndEM.cs" />
     <Compile Include="EventModels\SongStartEM.cs" />
     <Compile Include="EventModels\BaseEM.cs" />

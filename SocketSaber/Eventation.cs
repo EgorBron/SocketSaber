@@ -16,6 +16,8 @@ namespace SocketSaber {
         public static event BaseEventDelegate EveryEvent;
         public static event SongStartEventDelegate SongStartEvent;
         public static event SongEndEventDelegate SongEndEvent;
+        public static event BaseEmptyEventDelegate SongPauseEvent;
+        public static event BaseEmptyEventDelegate SongResumeEvent;
 
         public SockSEventation(TcpListener sock) {
             socket = sock;
@@ -52,6 +54,12 @@ namespace SocketSaber {
                 case EventList.SongMultiplayerEnd:
                 case EventList.SongCampaignEnd:
                     SongEndEvent?.Invoke((SongEndEM)emData.Data);
+                    break;
+                case EventList.SongPaused:
+                    SongPauseEvent?.Invoke();
+                    break;
+                case EventList.SongResumed:
+                    SongResumeEvent?.Invoke();
                     break;
             }
             SendRawDataToAll(preparedData);

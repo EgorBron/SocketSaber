@@ -6,10 +6,15 @@ namespace SocketSaber.EventModels {
     /// </summary>
     public interface IEventModel { }
     /// <summary>
-    /// Delegate for any event (ingame)
+    /// Delegate for any event with payload (ingame)
     /// </summary>
     /// <param name="e"></param>
     public delegate void BaseEventDelegate(IEventModel e);
+    /// <summary>
+    /// Delegate for any event withount payload (ingame)
+    /// </summary>
+    /// <param name="e"></param>
+    public delegate void BaseEmptyEventDelegate();
     /// <summary>
     /// List of opcodes (there it means type of event)
     /// </summary>

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SocketSaber.EventModels;
+using UnityEngine.UI;
 
 namespace SocketSaber.Utils {
 
@@ -14,20 +16,12 @@ namespace SocketSaber.Utils {
             var pause = new GamePause();
             pause.didPauseEvent += () => {
                 new Thread(() => {
-                    var mainDict = new DictStrO {
-                        ["op"] = EventList.SongPaused,
-                        ["d"] = null
-                    };
-                    Plugin.ConnProc.SendRawDataToAll(JsonConvert.SerializeObject(mainDict));
+                    Plugin.ConnProc.SendDataToAll(new BaseEM { Opcode = EventList.SongPaused, Data = null });
                 }).Start();
             };
             pause.didResumeEvent += () => {
                 new Thread(() => {
-                    var mainDict = new DictStrO {
-                        ["op"] = EventList.SongResumed,
-                        ["d"] = null
-                    };
-                    Plugin.ConnProc.SendRawDataToAll(JsonConvert.SerializeObject(mainDict));
+                    Plugin.ConnProc.SendDataToAll(new BaseEM { Opcode = EventList.SongResumed, Data = null });
                 }).Start();
             };
         }
