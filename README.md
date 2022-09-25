@@ -1,4 +1,4 @@
-# SocketSaber
+# SocketSaber <img src="./SocketSaberLogo.svg" width="50" alt="SockS Logo">
 
 Library and mod for it that allows you to open localhost TCP socket with lots of your current BS activity.
 
