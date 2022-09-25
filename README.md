@@ -1,16 +1,19 @@
 # SocketSaber
+
 Library and mod for it that allows you to open localhost TCP socket with lots of your current BS activity.
 
 Also works ingame withount sockets.
 
 ## Installation
-Download latest release from [here](https://github.com/EgorBron/SocketSaber/releases/latest). 
+
+Download latest release from [here](https://github.com/EgorBron/SocketSaber/releases/latest).
 
 Then just put `SocketSaber.dll` to `Plugins` folder in Beat Saber directory.
 
 ## Examples
 
 #### Recive data from game
+
 ```cs
 // subscribe to all events
 SocketSaber.SockSEventation.EveryEvent += (SocketSaber.EventModels.BaseEM e) => {
@@ -28,6 +31,7 @@ SocketSaber.SockSEventation.SongStartEvent += (SocketSaber.EventModels.SongStart
 ```
 
 #### Recive data by connecting to socket
+
 ```py
 # python example
 import socket, json
@@ -40,7 +44,3 @@ while 1:
   if recv['op'] == 11: # op 11 - song start
     print(recv['d']['songName']) # will print song name (omg really?)
 ```
-
-## todo
-https://github.com/Kylemc1413/Beat-Saber-Utils instead of raw patches
-fix discord_game_sdk.dll!!!
