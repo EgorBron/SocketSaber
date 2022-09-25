@@ -1,5 +1,6 @@
 ﻿namespace SocketSaber.EventModels {
-    public class SongEndModel : IEventModel {
+    public delegate void SongEndEventDelegate(SongEndEM e);
+    public class SongEndEM : IEventModel {
         /// <summary>
         /// What caused level ending
         /// </summary>

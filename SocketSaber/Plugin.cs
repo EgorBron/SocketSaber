@@ -12,7 +12,7 @@ namespace SocketSaber {
 
         internal static IPALogger Log { get; private set; }
 
-        public static SockSConnectionsProcessor ConnProc { get; private set; }
+        internal static SockSEventation ConnProc { get; private set; }
 
         private static readonly Harmony harmony = new Harmony("net.blusutils.socksaber");
 
@@ -31,7 +31,7 @@ namespace SocketSaber {
             var socket = new TcpListener(System.Net.IPAddress.Parse(ip), port);
             socket.Start();
             Log.Debug($"Socket started on {ip}:{port}");
-            ConnProc = new SockSConnectionsProcessor(socket);
+            ConnProc = new SockSEventation(socket);
             ConnProc.StartAccepting();
             Log.Debug("Started accepting connections");
             harmony.PatchAll(Assembly.GetExecutingAssembly());

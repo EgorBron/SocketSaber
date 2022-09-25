@@ -3,6 +3,7 @@ using HarmonyLib;
 using Newtonsoft.Json;
 using System.Threading;
 using SocketSaber.Utils;
+using SocketSaber.EventModels;
 
 namespace SocketSaber.HarmonyPatches {
     [HarmonyPatch]
@@ -11,7 +12,7 @@ namespace SocketSaber.HarmonyPatches {
         [HarmonyPatch(typeof(StandardLevelScenesTransitionSetupDataSO), "Init")]
         private static void Postfix(IDifficultyBeatmap difficultyBeatmap, GameplayModifiers gameplayModifiers) {
             new Thread(() => {
-                EventProcessors.MapProcessor.MapStart(11, difficultyBeatmap, gameplayModifiers);
+                EventProcessors.MapProcessor.MapStart(EventList.SongStart, difficultyBeatmap, gameplayModifiers);
             }).Start();
         }
     }
@@ -21,7 +22,7 @@ namespace SocketSaber.HarmonyPatches {
         [HarmonyPatch(typeof(MultiplayerLevelScenesTransitionSetupDataSO), "Init")]
         private static void Postfix(IDifficultyBeatmap difficultyBeatmap, GameplayModifiers gameplayModifiers) {
             new Thread(() => {
-                EventProcessors.MapProcessor.MapStart(12, difficultyBeatmap, gameplayModifiers);
+                EventProcessors.MapProcessor.MapStart(EventList.SongMultiplayerStart, difficultyBeatmap, gameplayModifiers);
             }).Start();
         }
     }
@@ -31,7 +32,7 @@ namespace SocketSaber.HarmonyPatches {
         [HarmonyPatch(typeof(MissionLevelScenesTransitionSetupDataSO), "Init")]
         private static void Postfix(IDifficultyBeatmap difficultyBeatmap, GameplayModifiers gameplayModifiers) {
             new Thread(() => {
-                EventProcessors.MapProcessor.MapStart(13, difficultyBeatmap, gameplayModifiers);
+                EventProcessors.MapProcessor.MapStart(EventList.SongCampaignStart, difficultyBeatmap, gameplayModifiers);
             }).Start();
         }
     }
@@ -44,7 +45,7 @@ namespace SocketSaber.HarmonyPatches {
             var now = DateTime.UtcNow.ToUnixTime();
             if (lastcall == 0 || (now - lastcall) > 1000) {
                 new Thread(() => {
-                    EventProcessors.MapProcessor.MapEnd(14, levelCompletionResults);
+                    EventProcessors.MapProcessor.MapEnd(EventList.SongEnd, levelCompletionResults);
                 }).Start();
                 lastcall = DateTime.UtcNow.ToUnixTime();
             }
@@ -56,7 +57,7 @@ namespace SocketSaber.HarmonyPatches {
         [HarmonyPatch(typeof(MultiplayerLevelScenesTransitionSetupDataSO), "Finish")]
         private static void Postfix(MultiplayerResultsData resultsData) {
             new Thread(() => {
-                EventProcessors.MapProcessor.MapEnd(15, resultsData);
+                EventProcessors.MapProcessor.MapEnd(EventList.SongMultiplayerEnd, resultsData);
             }).Start();
         }
     }
@@ -76,22 +77,22 @@ namespace SocketSaber.HarmonyPatches {
         [HarmonyPatch(typeof(MissionLevelScenesTransitionSetupDataSO), "Finish")]
         private static void Postfix(MissionCompletionResults levelCompletionResults) {
             new Thread(() => {
-                EventProcessors.MapProcessor.MapEnd(16, levelCompletionResults);
+                EventProcessors.MapProcessor.MapEnd(EventList.SongCampaignEnd, levelCompletionResults);
             }).Start();
         }
     }
-    [HarmonyPatch]
-    internal class MenueLoadPatch {
-        [HarmonyPriority(int.MinValue)]
-        [HarmonyPatch(typeof(MenuScenesTransitionSetupDataSO), nameof(MenuScenesTransitionSetupDataSO.Init))]
-        private static void Postfix() {
-            new Thread(() => {
-                var mainDict = new Dict {
-                    ["op"] = 10,
-                    ["d"] = null
-                };
-                Plugin.ConnProc.SendRawDataToAll(JsonConvert.SerializeObject(mainDict));
-            }).Start();
-        }
-    }
+    //[HarmonyPatch]
+    //internal class MenueLoadPatch {
+    //    [HarmonyPriority(int.MinValue)]
+    //    [HarmonyPatch(typeof(MenuScenesTransitionSetupDataSO), nameof(MenuScenesTransitionSetupDataSO.Init))]
+    //    private static void Postfix() {
+    //        new Thread(() => {
+    //            var mainDict = new DictStrO {
+    //                ["op"] = EventList.MenuLoad,
+    //                ["d"] = null
+    //            };
+    //            Plugin.ConnProc.SendRawDataToAll(JsonConvert.SerializeObject(mainDict));
+    //        }).Start();
+    //    }
+    //}
 }

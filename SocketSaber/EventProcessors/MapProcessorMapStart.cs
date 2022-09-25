@@ -4,8 +4,8 @@ using SocketSaber.Utils;
 
 namespace SocketSaber.EventProcessors {
     partial class MapProcessor {
-        public static void MapStart(int opcode, IDifficultyBeatmap difficultyBeatmap, GameplayModifiers gameplayModifiers) {
-            var songData = new SongStartModel {
+        public static void MapStart(EventList opcode, IDifficultyBeatmap difficultyBeatmap, GameplayModifiers gameplayModifiers) {
+            var songData = new SongStartEM {
                 songName = difficultyBeatmap.level.songName,
                 songAuthorName = difficultyBeatmap.level.songAuthorName,
                 duration = difficultyBeatmap.level.songDuration,
@@ -28,7 +28,7 @@ namespace SocketSaber.EventProcessors {
                 songData.mapScoreSaberRanked = map.Ranked;
                 songData.mapBeatSaverCoverLink = map.LatestVersion.CoverURL;
             }
-            Plugin.ConnProc.SendDataToAll(new BaseEventModel { op = opcode, d = songData });
+            Plugin.ConnProc.SendDataToAll(new BaseEM { Opcode = opcode, Data = songData });
             Plugin.Log.Notice($"Level started. Opcode: {opcode}");
         }
     }

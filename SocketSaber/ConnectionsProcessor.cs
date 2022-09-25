@@ -8,21 +8,17 @@ using SocketSaber.Utils;
 using SocketSaber.EventModels;
 
 namespace SocketSaber {
-    public class SockSConnectionsProcessor : IDisposable {
+    
+    public class SockSEventation : IDisposable {
         TcpListener socket;
         List<TcpClient> tcpClients = new List<TcpClient>();
-        List<Func<BaseEventModel, bool>> subscribers = new List<Func<BaseEventModel, bool>>();
-        public SockSConnectionsProcessor(TcpListener sock) {
+
+        public static event BaseEventDelegate EveryEvent;
+        public static event SongStartEventDelegate SongStartEvent;
+        public static event SongEndEventDelegate SongEndEvent;
+
+        public SockSEventation(TcpListener sock) {
             socket = sock;
-        }
-        public event Func<BaseEventModel, bool> Events {
-            add {
-                
-                subscribers.Add(value);
-            }
-            remove {
-                subscribers.Remove(value);
-            }
         }
         public void StartAccepting() {
             new Thread(() => { while (true) { var client = socket.AcceptTcpClient(); Plugin.Log.Info("New connection"); tcpClients.Add(client); }}).Start();
@@ -40,14 +36,26 @@ namespace SocketSaber {
             tcpClients.Clear();
             socket.Stop();
         }
-        public void SendDataToAll(BaseEventModel data) {
-            var preparedData = JsonConvert.SerializeObject(data);
-            new Thread(() => {
-                foreach (var subscriber in subscribers) {
-                    subscriber.Invoke(data);
-                }
-            }).Start();
+        public void SendDataToAll(BaseEM emData) {
+            Plugin.Log.Warn("Sending data");
+            var preparedData = JsonConvert.SerializeObject(emData);
+            EveryEvent?.Invoke(emData.Data);
+            
+            switch (emData.Opcode) {
+                case EventList.MenuLoad: break;
+                case EventList.SongStart:
+                case EventList.SongMultiplayerStart:
+                case EventList.SongCampaignStart:
+                    SongStartEvent?.Invoke((SongStartEM)emData.Data);
+                    break;
+                case EventList.SongEnd:
+                case EventList.SongMultiplayerEnd:
+                case EventList.SongCampaignEnd:
+                    SongEndEvent?.Invoke((SongEndEM)emData.Data);
+                    break;
+            }
             SendRawDataToAll(preparedData);
+            
         }
     }
 }

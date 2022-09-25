@@ -1,5 +1,6 @@
 ﻿namespace SocketSaber.EventModels {
-    public class SongStartModel : IEventModel {
+    public delegate void SongStartEventDelegate(SongStartEM e);
+    public class SongStartEM : IEventModel {
         /// <summary>
         /// Song display name
         /// </summary>
@@ -25,7 +26,7 @@
         /// </summary>
         public string mapGameLevelID;
         /// <summary>
-        /// Song Beats Per Minute
+        /// Beats Per Minute in song
         /// </summary>
         public float songBPM;
         /// <summary>
